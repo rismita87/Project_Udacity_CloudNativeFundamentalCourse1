@@ -2,8 +2,8 @@ apiVersion: v1
 name: techtrends
 description: Install a application techtrends
 keywords:
-  - techtrends
+- techtrends
 version: 1.0.0
 maintainers:
-  - name: rismita
-    email: rismita.ghosh@gmail.com
+- name: abhirup 
+  email: miles2gooo@gmail.com

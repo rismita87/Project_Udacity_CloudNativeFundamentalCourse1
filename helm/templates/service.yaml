@@ -5,12 +5,12 @@ metadata:
     app: techtrends
     tag: latest
   name: techtrends
-  namespace: { { .Values.namespace.name } }
+  namespace: {{ .Values.namespace.name }}
 spec:
   ports:
-    - port: { { .Values.service.port } }
-      protocol: TCP
-      targetPort: 3111
+  - port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort: 3111
   selector:
     app: techtrends
     tag: latest
