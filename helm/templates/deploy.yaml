@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: techtrends
+  name: techtrends
+  namespace: {{ .Values.namespace.name }} 
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: techtrends
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: techtrends
+    spec:
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: IfNotPresent 
+        name: techtrends
+        ports:
+        - containerPort: 3111
+        livenessProbe:
+          httpGet:
+            path: /healthz         # The path to check for the liveness probe
+            port: 3111
+          initialDelaySeconds: 15  # Wait this many seconds before starting the probe
+          periodSeconds: 10        # Check the probe every 10 seconds
+        readinessProbe:
+          httpGet:
+            path: /healthz         # The path to check for the readiness probe
+            port: 3111             # The port to check on
+          initialDelaySeconds: 5   # Wait this many seconds before starting the probe
+          periodSeconds: 5  
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
