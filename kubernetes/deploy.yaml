@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: techtrends
+  name: techtrends
+  namespace: sandbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: techtrends
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: techtrends
+    spec:
+      containers:
+        - image: rismitaghosh/techtrends:latest
+          imagePullPolicy: IfNotPresent
+          name: techtrends
+          ports:
+            - containerPort: 3111
+          livenessProbe:
+            httpGet:
+              path: /healthz # The path to check for the liveness probe
+              port: 3111
+            initialDelaySeconds: 15 # Wait this many seconds before starting the probe
+            periodSeconds: 10 # Check the probe every 10 seconds
+          readinessProbe:
+            httpGet:
+              path: /healthz # The path to check for the readiness probe
+              port: 3111 # The port to check on
+            initialDelaySeconds: 5 # Wait this many seconds before starting the probe
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
