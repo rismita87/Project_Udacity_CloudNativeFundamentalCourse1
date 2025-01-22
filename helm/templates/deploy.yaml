@@ -12,9 +12,9 @@ spec:
       app: techtrends
   strategy:
     rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge}}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable}}
+    type: {{ .Values.strategy.type}}
   template:
     metadata:
       labels:
@@ -25,19 +25,19 @@ spec:
         imagePullPolicy: IfNotPresent 
         name: techtrends
         ports:
-        - containerPort: 3111
+        - containerPort: {{ .Values.containers.ports.containerPort}}
         livenessProbe:
           httpGet:
             path: /healthz         # The path to check for the liveness probe
-            port: 3111
-          initialDelaySeconds: 15  # Wait this many seconds before starting the probe
-          periodSeconds: 10        # Check the probe every 10 seconds
+            port: {{ .Values.livenessProbe.httpGet.port}}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}  # Wait this many seconds before starting the probe
+          periodSeconds: {{ .Values.livenessProbe.httpGet.periodSeconds}}        # Check the probe every 10 seconds
         readinessProbe:
           httpGet:
             path: /healthz         # The path to check for the readiness probe
-            port: 3111             # The port to check on
-          initialDelaySeconds: 5   # Wait this many seconds before starting the probe
-          periodSeconds: 5  
+            port: {{ .Values.readinessProbe.httpGet.port}}             # The port to check on
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds}}   # Wait this many seconds before starting the probe
+          periodSeconds: {{ .Values.readinessProbe.httpGet.periodSeconds}}  
         resources:
           limits:
             cpu: {{ .Values.resources.limits.cpu }}
@@ -45,4 +45,5 @@ spec:
           requests:
             cpu: {{ .Values.resources.requests.cpu }}
             memory: {{ .Values.resources.requests.memory }}
+
 

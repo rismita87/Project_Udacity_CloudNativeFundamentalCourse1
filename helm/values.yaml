@@ -14,10 +14,16 @@ image:
 
 replicaCount: 1
 
+strategy:
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  type: RollingUpdate
+
 resources:
   requests:
-    cpu: 250m
     memory: 64Mi
+    cpu: 250m
   limits:
     cpu: 500m
     memory: 128Mi
@@ -29,7 +35,9 @@ containers:
 livenessProbe:
   httpGet:
     path: /healthz
+    port: 3111
 
 readinessProbe:
   httpGet:
     path: /healthz
+    port: 3111
